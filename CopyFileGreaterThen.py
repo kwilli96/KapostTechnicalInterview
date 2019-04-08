@@ -2,17 +2,17 @@ import boto3
 from os import environ
 
 if __name__ == "__main__":
-    # Bucket Names (MinSize gets converted to Bytes to be compatible with object Sizes)
-    DestBucketName = "destinationbucketwilkins30"
-    SrcBucketName = "sourcebucketwilkins30"
-    MinSize = .02 * 1024 * 1024
+    #Grabs bucket names from enviroment variable set in Dockerfile
+    DestBucketName = environ["DestBucket"]
+    SrcBucketName = environ["SrcBucket"]
+    MinSize = float(environ["MinSize"]) * 1024 * 1024
 
-    # User credentials
-    user = "AKIAWNAVMEGVNWWFY54Y"
-    passkey = "r5MRRcbPf5CA3srRoxW0DTN7DwIKMNMhPJqVher4"
+    #Grabs user credentials from enviroment variables
+    user = environ["username"]
+    passkey = environ["passkey"]
 
-    # Get Buckets from s3 resource
     S3 = boto3.resource('s3', aws_access_key_id=user, aws_secret_access_key=passkey)
+
     S3Source = S3.Bucket(SrcBucketName)
     S3Destination = S3.Bucket(DestBucketName)
 
@@ -30,7 +30,6 @@ if __name__ == "__main__":
             "Key" : key
         }
         S3.meta.client.copy(CopySource, DestBucketName, obj.key)
-
 
 
 
